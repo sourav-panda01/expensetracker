@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<head>
+<h1 style="text-align:center; background: blue;">Expense Tracker</h1>
+</head>
+<body>
+<br><br>
+<div id="newDiv">
+</div>
+<p id="paragraph"></p>
+<form id="postform" style="text-align:center" onsubmit="postform(event)">
+    <h2>Add Expense</h2>
+    <label>Name Of Expense:</label>
+    <input id="name" type="text">
+    <br><br>
+    <label>Email:</label><input id="email" type="email">
+    <br><br>
+    <label>Purpose:</label><input id="purpose" type="text">
+    <br><br>
+    <label>Amount:</label><input type="text" id="amt">
+    <input type="submit" value="post data" >
+</form>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<script>
+    function postform(e){
+        e.preventDefault()
+
+        var name=document.getElementById("name").value
+        var email=document.getElementById("email").value
+        var purpose=document.getElementById('purpose').value
+        var amount=document.getElementById('amt').value
+        axios.post('http://localhost:3000/post',{name:name,email:email,purpose:purpose,amount:amount})
+            .then(response=>console.log("response is",response))
+            .catch(err=>console.log(err))
+    }
+    function onscreen(){
+        axios.get('http://localhost:3000/get')
+        .then(response =>{
+        data=response.data.data;
+        console.log(data)
+        const divelement=document.getElementById("newDiv")
+        console.log("sdsad",data.id)
+        for(let i=0;i<data.length;i++){
+            console.log("hello inside for loop")
+            let id=data[i].id
+            let name=data[i].name
+            let email=data[i].email
+            let purpose=data[i].Purpose
+            let amount=data[i].amount
+            let s=name+"  "+email+"  "+purpose+"   "+amount
+            console.log(s)
+            var para_element = document.createElement('p');
+            para_element.setAttribute("id",id);
+            node=document.createTextNode(s);
+            para_element.appendChild(node);
+            var editbtn=document.createElement('input');
+            var deletebtn=document.createElement("input");
+            deletebtn.setAttribute("value","Delete")
+            editbtn.setAttribute("value","Edit")
+            deletebtn.setAttribute("type","button")
+            editbtn.setAttribute("type","button")
+            para_element.appendChild(deletebtn);
+            para_element.appendChild(editbtn);
+            deletebtn.addEventListener('click',()=>deletedata(id))
+            editbtn.addEventListener('click',()=>editdata(name,email,purpose,amount,id))
+            divelement.appendChild(para_element)            
+        }
+        }).catch(err=>console.log(err))
+    }
+    document.addEventListener("DOMContentLoaded", function (event) {
+    console.log("vscode");
+    event.preventDefault();
+    onscreen()  
+    });
+    function deletedata(id){
+        console.log("Enter delete");
+        axios.delete(`http://localhost:3000/delete/${id}`)
+        .then(result=>console.log(result))
+        .catch(err=>console.log(err))
+    }
+    function editdata(name,email,purpose,amount,id){
+        console.log("Enter edit");
+        document.getElementById("name").value=name
+        document.getElementById("email").value=email
+        document.getElementById('purpose').value=purpose
+        document.getElementById('amt').value=amount
+        deletedata(id)
+    }
+</script>
+</body>
+</html>

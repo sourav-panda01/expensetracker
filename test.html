@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+<h1 style="text-align:center; background: blue;">Expense Tracker</h1>
+</head>
+<body>
+    <script>
+        var shoppingCart = {
+		"Shampoo": 100,
+		"Soap": 30,
+		"Towel": 200,
+		"Water": 50
+}
+
+var arr=Object.keys(shoppingCart);
+var total=0
+for(let i=0;i<arr.length;i++){
+    console.log(arr[i],"  pricce is  ",shoppingCart[arr[i]])
+    total+=shoppingCart[arr[i]]
+    
+}
+
+console.log("Total=",total)
+
+    </script>
+</body>
+</html>
